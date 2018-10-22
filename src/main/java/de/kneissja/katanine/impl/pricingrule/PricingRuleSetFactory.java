@@ -1,4 +1,4 @@
-package de.kneissja.katanine.impl;
+package de.kneissja.katanine.impl.pricingrule;
 
 import de.kneissja.katanine.api.PricingRule;
 import de.kneissja.katanine.api.PricingRuleSet;
@@ -15,6 +15,6 @@ public class PricingRuleSetFactory {
      * @return ruleset describing all item pricing rules
      */
     public PricingRuleSet createPricingRuleSet(Collection<PricingRule> pricingRules) {
-        return null;
+        return new PricingRuleSetImpl(pricingRules);
     }
 }

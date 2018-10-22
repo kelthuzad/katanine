@@ -1,4 +1,4 @@
-package de.kneissja.katanine.impl;
+package de.kneissja.katanine.impl.checkout;
 
 import de.kneissja.katanine.api.Checkout;
 import de.kneissja.katanine.api.PricingRuleSet;
@@ -14,6 +14,6 @@ public class CheckoutFactory {
      * @return a checkout that calculates prices for items
      */
     public Checkout createCheckout(PricingRuleSet pricingRuleSet) {
-        return null;
+        return new CheckoutImpl(pricingRuleSet);
     }
 }
