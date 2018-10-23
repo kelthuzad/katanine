@@ -3,7 +3,8 @@ package de.kneissja.katanine.pricingrule.rules;
 import de.kneissja.katanine.Price;
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.item.ItemIdentifier;
-import de.kneissja.katanine.item.ItemImpl;
+import de.kneissja.katanine.item.ItemInventory;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -15,6 +16,41 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class XItemsCostYPricingRuleTest {
+
+    private ItemInventory inventory;
+
+    @Before
+    public void init() {
+        inventory = new ItemInventory()
+                .addItem(ItemIdentifier.A, new Price(50))
+                .addItem(ItemIdentifier.B, new Price(30))
+                .addItem(ItemIdentifier.C, new Price(20))
+                .addItem(ItemIdentifier.D, new Price(15));
+    }
+
+    @Test
+    public void testXImtesCostYPricingRule_noRules() {
+        Map<ItemIdentifier, Map<Integer, Price>> xcostyPricingRules = new HashMap<>();
+        XItemsCostYPricingRule rule = new XItemsCostYPricingRule(xcostyPricingRules);
+
+        List<Item> itemsToCalculate = Arrays.asList(
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.C),
+                inventory.findItem(ItemIdentifier.B),
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.D),
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.B),
+                inventory.findItem(ItemIdentifier.B),
+                inventory.findItem(ItemIdentifier.D),
+                inventory.findItem(ItemIdentifier.C),
+                inventory.findItem(ItemIdentifier.C));
+
+        Price basePrice = new Price(0);
+        Price endPrice = rule.calculatePrice(itemsToCalculate, basePrice);
+        assertNotNull(endPrice);
+        assertEquals(330, endPrice.getPriceValue());
+    }
 
     @Test
     public void testXImtesCostYPricingRule() {
@@ -30,17 +66,18 @@ public class XItemsCostYPricingRuleTest {
 
         XItemsCostYPricingRule rule = new XItemsCostYPricingRule(xcostyPricingRules);
 
-        List<Item> itemsToCalculate = Arrays.asList(new ItemImpl(ItemIdentifier.A, new Price(50)),
-                new ItemImpl(ItemIdentifier.A, new Price(50)),
-                new ItemImpl(ItemIdentifier.B, new Price(30)),
-                new ItemImpl(ItemIdentifier.A, new Price(50)),
-                new ItemImpl(ItemIdentifier.A, new Price(50)),
-                new ItemImpl(ItemIdentifier.A, new Price(50)),
-                new ItemImpl(ItemIdentifier.A, new Price(50)),
-                new ItemImpl(ItemIdentifier.B, new Price(30)),
-                new ItemImpl(ItemIdentifier.B, new Price(30)),
-                new ItemImpl(ItemIdentifier.A, new Price(50)),
-                new ItemImpl(ItemIdentifier.A, new Price(50)));
+        List<Item> itemsToCalculate = Arrays.asList(
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.B),
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.B),
+                inventory.findItem(ItemIdentifier.B),
+                inventory.findItem(ItemIdentifier.A),
+                inventory.findItem(ItemIdentifier.A));
 
         Price basePrice = new Price(0);
         Price endPrice = rule.calculatePrice(itemsToCalculate, basePrice);
