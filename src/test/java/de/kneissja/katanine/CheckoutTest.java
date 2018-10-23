@@ -3,7 +3,8 @@ package de.kneissja.katanine;
 import de.kneissja.katanine.api.*;
 import de.kneissja.katanine.impl.PriceImpl;
 import de.kneissja.katanine.impl.checkout.CheckoutFactory;
-import de.kneissja.katanine.impl.item.ItemImpl;
+import de.kneissja.katanine.impl.item.Item;
+import de.kneissja.katanine.impl.item.ItemIdentifier;
 import de.kneissja.katanine.impl.item.ItemInventory;
 import de.kneissja.katanine.impl.pricingrule.PricingRuleSetFactory;
 import de.kneissja.katanine.impl.pricingrule.rules.DefaultPricingRule;
@@ -24,10 +25,10 @@ public class CheckoutTest {
     @Before
     public void preTest() {
         itemInventory =  new ItemInventory();
-        itemInventory.addItems(new ItemImpl("A", new PriceImpl(50)),
-                               new ItemImpl("B", new PriceImpl(30)),
-                               new ItemImpl("C", new PriceImpl(20)),
-                               new ItemImpl("D", new PriceImpl(15)));
+        itemInventory.addItem(ItemIdentifier.A, new PriceImpl(50))
+                .addItem(ItemIdentifier.B, new PriceImpl(30))
+                .addItem(ItemIdentifier.C, new PriceImpl(20))
+                .addItem(ItemIdentifier.D, new PriceImpl(15));
 
         List<PricingRule> rules = Arrays.asList(new DefaultPricingRule());
         PricingRuleSet pricingRuleSet = new PricingRuleSetFactory().createPricingRuleSet(rules);
@@ -36,7 +37,10 @@ public class CheckoutTest {
 
     private List<Item> items(final String goods) {
         List<String> itemNamesList = Arrays.asList(goods.split(""));
-        return itemNamesList.stream().map(itemInventory::findItem).collect(Collectors.toList());
+
+        return itemNamesList.stream().map(ItemIdentifier::valueOf)
+                .map(itemInventory::findItem)
+                .collect(Collectors.toList());
     }
 
     private Price price(final String goods) {
@@ -66,15 +70,15 @@ public class CheckoutTest {
 
     public void testIncremental() {
         assertEquals(  0, checkout.getTotal().getPrice());
-        checkout.scan(itemInventory.findItem("A"));
+        checkout.scan(itemInventory.findItem(ItemIdentifier.A));
         assertEquals( 50, checkout.getTotal().getPrice());
-        checkout.scan(itemInventory.findItem("B"));
+        checkout.scan(itemInventory.findItem(ItemIdentifier.B));
         assertEquals( 80, checkout.getTotal().getPrice());
-        checkout.scan(itemInventory.findItem("A"));
+        checkout.scan(itemInventory.findItem(ItemIdentifier.A));
         assertEquals(130, checkout.getTotal().getPrice());
-        checkout.scan(itemInventory.findItem("A"));
+        checkout.scan(itemInventory.findItem(ItemIdentifier.A));
         assertEquals(160, checkout.getTotal().getPrice());
-        checkout.scan(itemInventory.findItem("B"));
+        checkout.scan(itemInventory.findItem(ItemIdentifier.B));
         assertEquals(175, checkout.getTotal().getPrice());
     }
 }

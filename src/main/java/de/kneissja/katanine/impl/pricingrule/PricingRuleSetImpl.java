@@ -1,6 +1,6 @@
 package de.kneissja.katanine.impl.pricingrule;
 
-import de.kneissja.katanine.api.Item;
+import de.kneissja.katanine.impl.item.Item;
 import de.kneissja.katanine.api.Price;
 import de.kneissja.katanine.api.PricingRule;
 import de.kneissja.katanine.api.PricingRuleSet;

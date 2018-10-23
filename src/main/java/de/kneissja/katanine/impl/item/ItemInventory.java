@@ -1,21 +1,25 @@
 package de.kneissja.katanine.impl.item;
 
-import de.kneissja.katanine.api.Item;
+import de.kneissja.katanine.api.Price;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Creates new items to be scanned at the checkout
  */
 public class ItemInventory {
 
-    private Map<String, Item> inventory = new HashMap<>();
+    private Map<ItemIdentifier, Item> inventory = new HashMap<>();
 
-    public void addItems(Item... items) {
-        inventory.putAll(Stream.of(items).collect(Collectors.toMap(Item::getIdentifier, item -> item)));
+    public ItemInventory addItem(ItemIdentifier identifier, Price itemPrice) {
+
+        if (inventory.containsKey(identifier)) {
+            throw new IllegalArgumentException("There is already an item with identifier "+identifier+ " in the inventory");
+        }
+
+        inventory.put(identifier, new ItemImpl(identifier, itemPrice));
+        return this;
     }
 
     /**
@@ -23,7 +27,7 @@ public class ItemInventory {
      * @param identifier identifier of the item
      * @return The item that was found
      */
-    public Item findItem(String identifier) {
+    public Item findItem(ItemIdentifier identifier) {
         return inventory.get(identifier);
     }
 }

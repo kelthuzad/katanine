@@ -1,4 +1,6 @@
-package de.kneissja.katanine.api;
+package de.kneissja.katanine.impl.item;
+
+import de.kneissja.katanine.api.Price;
 
 /**
  * An item to be sold at the checkout
@@ -8,7 +10,7 @@ public interface Item {
      * The idenfitier of the item
      * @return identifier
      */
-    String getIdentifier();
+    ItemIdentifier getIdentifier();
 
     /**
      * The price of a single item

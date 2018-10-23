@@ -1,5 +1,7 @@
 package de.kneissja.katanine.api;
 
+import de.kneissja.katanine.impl.item.Item;
+
 import java.util.Collection;
 
 /**
