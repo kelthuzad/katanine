@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class DefaultPricingRuleTest {
+public class SimplePricingRuleTest {
     private ItemInventory inventory;
 
     @Before
@@ -31,7 +31,7 @@ public class DefaultPricingRuleTest {
         List<Item> itemsToCalculate = Collections.emptyList();
 
         Price basePrice = new Price(0);
-        Price endPrice = new DefaultPricingRule().calculatePrice(itemsToCalculate, basePrice);
+        Price endPrice = new SimplePricingRule().calculatePrice(itemsToCalculate, basePrice);
         assertNotNull(endPrice);
         assertEquals(0, endPrice.getPriceValue());
     }
@@ -52,7 +52,7 @@ public class DefaultPricingRuleTest {
                 inventory.findItem(ItemIdentifier.A));
 
         Price basePrice = new Price(0);
-        Price endPrice = new DefaultPricingRule().calculatePrice(itemsToCalculate, basePrice);
+        Price endPrice = new SimplePricingRule().calculatePrice(itemsToCalculate, basePrice);
         assertNotNull(endPrice);
         assertEquals(380, endPrice.getPriceValue());
     }

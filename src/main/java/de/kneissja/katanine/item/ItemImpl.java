@@ -21,4 +21,9 @@ class ItemImpl implements Item {
     public Price getPrice() {
         return price;
     }
+
+    @Override
+    public String toString() {
+        return "Item "+identifier.name()+", "+price;
+    }
 }

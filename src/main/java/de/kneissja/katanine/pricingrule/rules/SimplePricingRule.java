@@ -7,13 +7,13 @@ import de.kneissja.katanine.item.Item;
 import java.util.Collection;
 
 /**
- * Default pricing rule. Just adds all prices.
+ * Simple pricing rule. Just adds all prices of the items.
  */
-public class DefaultPricingRule implements PricingRule {
+public class SimplePricingRule implements PricingRule {
 
     @Override
     public PricingRule setNextPricingRule(PricingRule nextPricingRule) {
-        // is not used because this rule calculates all items
+        // is not used because this rule calculates all item values
         return this;
     }
 
@@ -21,7 +21,7 @@ public class DefaultPricingRule implements PricingRule {
     public Price calculatePrice(Collection<Item> items, Price basePrice) {
         Price calculatedPrice = basePrice;
         for (Item item: items) {
-            calculatedPrice = calculatedPrice.add(item.getPrice());
+            calculatedPrice = calculatedPrice.add(item.getPrice()); // add all item prices together
         }
         return calculatedPrice;
     }

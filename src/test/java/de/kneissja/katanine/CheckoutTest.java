@@ -6,7 +6,7 @@ import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.item.ItemIdentifier;
 import de.kneissja.katanine.item.ItemInventory;
 import de.kneissja.katanine.pricingrule.PricingRule;
-import de.kneissja.katanine.pricingrule.rules.DefaultPricingRule;
+import de.kneissja.katanine.pricingrule.rules.SimplePricingRule;
 import de.kneissja.katanine.pricingrule.rules.XItemsCostYPricingRule;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class CheckoutTest {
         xItemsCostYRules.put(ItemIdentifier.B, itemBPricingRule);
 
         PricingRule pricingRule = new XItemsCostYPricingRule(xItemsCostYRules)
-                .setNextPricingRule(new DefaultPricingRule());
+                .setNextPricingRule(new SimplePricingRule());
 
         return new CheckoutImpl(pricingRule);
     }

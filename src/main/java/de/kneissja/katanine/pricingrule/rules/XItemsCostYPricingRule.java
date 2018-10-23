@@ -8,19 +8,22 @@ import de.kneissja.katanine.item.ItemIdentifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Pricing rule that calculates special prices for items with multiple occurance.
+ * The special pricing can be defined by the priceCalculationMap in the constructor.
+ */
 public class XItemsCostYPricingRule implements PricingRule {
 
     private Map<ItemIdentifier, Map<Integer, Price>> priceCalculationMap;
     private PricingRule nextPricingRule;
 
-    public XItemsCostYPricingRule(Map<ItemIdentifier, Map<Integer, Price>> priceCalculationMap, PricingRule nextPricingRule) {
-        this.priceCalculationMap = priceCalculationMap;
-        this.nextPricingRule = nextPricingRule;
-    }
-
+    /**
+     * Creates a new pricing rule instance
+     * @param priceCalculationMap map with the info about the special price. The map must contain one entry per item identifier.
+     *                            Each entry contains itself a mapping from "number of items" to "special price"
+     */
     public XItemsCostYPricingRule(Map<ItemIdentifier, Map<Integer, Price>> priceCalculationMap) {
         this.priceCalculationMap = priceCalculationMap;
-        this.nextPricingRule = new DefaultPricingRule();
     }
 
     @Override
@@ -32,36 +35,54 @@ public class XItemsCostYPricingRule implements PricingRule {
     @Override
     public Price calculatePrice(Collection<Item> itemsToCalculate, Price basePrice) {
         Map<ItemIdentifier, List<Item>> itemsByIdentifier = itemsToCalculate.stream().collect(Collectors.groupingBy(Item::getIdentifier));
-        List<Item> uncalculatedItems = new ArrayList<>();
 
-        Price newPrice = basePrice;
+        List<Item> uncalculatedItems = new ArrayList<>(); // items that cannot be calculated by this rule
+        Price calculatedPrice = basePrice;
 
         for (Map.Entry<ItemIdentifier, List<Item>> entry: itemsByIdentifier.entrySet()) {
-            ItemIdentifier identifier = entry.getKey();
-            List<Item> items = entry.getValue();
+            calculatedPrice = getItemPrice(uncalculatedItems, calculatedPrice, entry.getKey(), entry.getValue());
+        }
 
-            if (!priceCalculationMap.containsKey(identifier)) {
-                uncalculatedItems.addAll(items);
+        if (!uncalculatedItems.isEmpty() && nextPricingRule == null) {
+            throw new IllegalStateException("There are uncalculated items and there is no next pricing rule. Cannot calculate the price, please set a next pricing rule");
+        }
+
+        return nextPricingRule.calculatePrice(uncalculatedItems, calculatedPrice);
+    }
+
+    private Price getItemPrice(List<Item> uncalculatedItems, Price currentPrice, ItemIdentifier identifier, List<Item> items) {
+        Price newPrice = currentPrice;
+
+        if (!priceCalculationMap.containsKey(identifier)) {
+            // there is no rule for this kind of item, price cannot be calculated here
+            uncalculatedItems.addAll(items);
+            return newPrice;
+        }
+
+        Map<Integer, Price> specialPriceMap = priceCalculationMap.get(identifier); //  map with item-amount -> special-price
+        List<Integer> sorteditemAmountDefinitionList = specialPriceMap.keySet().stream() // sort item-amount definitions descending
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
+
+        int numberOfItems = items.size();
+        for (Integer itemAmountDefinition : sorteditemAmountDefinitionList) {
+            int numberOfTimesThisItemAmountCanBeApplied = numberOfItems / itemAmountDefinition;
+
+            if (numberOfTimesThisItemAmountCanBeApplied == 0) {
                 continue;
             }
 
-            Map<Integer, Price> priceMap = priceCalculationMap.get(identifier);
-            List<Integer> sortedPriceMapKeys = priceMap.keySet().stream()
-                    .sorted(Comparator.reverseOrder())
-                    .collect(Collectors.toList());
+            Price specialPriceForThisAmountOfItems = specialPriceMap.get(itemAmountDefinition);
+            Price calculatedPrice = specialPriceForThisAmountOfItems.multiply(numberOfTimesThisItemAmountCanBeApplied);
+            newPrice = newPrice.add(calculatedPrice);
+            numberOfItems -= numberOfTimesThisItemAmountCanBeApplied * itemAmountDefinition;
 
-            int numberOfItems = items.size();
-            for (Integer priceMapKey : sortedPriceMapKeys) {
-                int numberOfTimesThisKeyCanBeApplied = numberOfItems / priceMapKey;
-                Price pricePerKeyOccurance = priceMap.get(priceMapKey);
-                Price calculatedPrice = pricePerKeyOccurance.multiply(numberOfTimesThisKeyCanBeApplied);
-                newPrice = newPrice.add(calculatedPrice);
-                numberOfItems -= numberOfTimesThisKeyCanBeApplied * priceMapKey;
+            if (numberOfItems == 0) {
+                break; // all items were calculated
             }
-
-            uncalculatedItems.addAll(items.subList(0, numberOfItems));
         }
 
-        return nextPricingRule.calculatePrice(uncalculatedItems, newPrice);
+        uncalculatedItems.addAll(items.subList(0, numberOfItems)); // add the amount of items that could not be calculated
+        return newPrice;
     }
 }

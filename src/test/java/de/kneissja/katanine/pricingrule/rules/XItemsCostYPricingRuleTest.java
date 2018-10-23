@@ -4,6 +4,7 @@ import de.kneissja.katanine.Price;
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.item.ItemIdentifier;
 import de.kneissja.katanine.item.ItemInventory;
+import de.kneissja.katanine.pricingrule.PricingRule;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class XItemsCostYPricingRuleTest {
     @Test
     public void testXImtesCostYPricingRule_noRules() {
         Map<ItemIdentifier, Map<Integer, Price>> xcostyPricingRules = new HashMap<>();
-        XItemsCostYPricingRule rule = new XItemsCostYPricingRule(xcostyPricingRules);
+        PricingRule rule = new XItemsCostYPricingRule(xcostyPricingRules).setNextPricingRule(new SimplePricingRule());
 
         List<Item> itemsToCalculate = Arrays.asList(
                 inventory.findItem(ItemIdentifier.A),
@@ -64,7 +65,7 @@ public class XItemsCostYPricingRuleTest {
         xcostyPricingRules.put(ItemIdentifier.A, xItemACostYPricingRules);
         xcostyPricingRules.put(ItemIdentifier.B, xItemBCostYPricingRules);
 
-        XItemsCostYPricingRule rule = new XItemsCostYPricingRule(xcostyPricingRules);
+        PricingRule rule = new XItemsCostYPricingRule(xcostyPricingRules).setNextPricingRule(new SimplePricingRule());
 
         List<Item> itemsToCalculate = Arrays.asList(
                 inventory.findItem(ItemIdentifier.A),
