@@ -1,7 +1,7 @@
 package de.kneissja.katanine;
 
 import de.kneissja.katanine.api.*;
-import de.kneissja.katanine.impl.PriceImpl;
+import de.kneissja.katanine.impl.Price;
 import de.kneissja.katanine.impl.checkout.CheckoutFactory;
 import de.kneissja.katanine.impl.item.Item;
 import de.kneissja.katanine.impl.item.ItemIdentifier;
@@ -25,10 +25,10 @@ public class CheckoutTest {
     @Before
     public void preTest() {
         itemInventory =  new ItemInventory();
-        itemInventory.addItem(ItemIdentifier.A, new PriceImpl(50))
-                .addItem(ItemIdentifier.B, new PriceImpl(30))
-                .addItem(ItemIdentifier.C, new PriceImpl(20))
-                .addItem(ItemIdentifier.D, new PriceImpl(15));
+        itemInventory.addItem(ItemIdentifier.A, new Price(50))
+                .addItem(ItemIdentifier.B, new Price(30))
+                .addItem(ItemIdentifier.C, new Price(20))
+                .addItem(ItemIdentifier.D, new Price(15));
 
         List<PricingRule> rules = Arrays.asList(new DefaultPricingRule());
         PricingRuleSet pricingRuleSet = new PricingRuleSetFactory().createPricingRuleSet(rules);
@@ -51,34 +51,34 @@ public class CheckoutTest {
 
     @Test
     public void testTotals() {
-        assertEquals(0, price("").getPrice());
-        assertEquals(50, price("A").getPrice());
-        assertEquals(80, price("AB").getPrice());
-        assertEquals(115, price("CDBA").getPrice());
+        assertEquals(0, price("").getPriceValue());
+        assertEquals(50, price("A").getPriceValue());
+        assertEquals(80, price("AB").getPriceValue());
+        assertEquals(115, price("CDBA").getPriceValue());
 
-        assertEquals(100, price("AA").getPrice());
-        assertEquals(130, price("AAA").getPrice());
-        assertEquals(180, price("AAAA").getPrice());
-        assertEquals(230, price("AAAAA").getPrice());
-        assertEquals(260, price("AAAAAA").getPrice());
+        assertEquals(100, price("AA").getPriceValue());
+        assertEquals(130, price("AAA").getPriceValue());
+        assertEquals(180, price("AAAA").getPriceValue());
+        assertEquals(230, price("AAAAA").getPriceValue());
+        assertEquals(260, price("AAAAAA").getPriceValue());
 
-        assertEquals(160, price("AAAB").getPrice());
-        assertEquals(175, price("AAABB").getPrice());
-        assertEquals(190, price("AAABBD").getPrice());
-        assertEquals(190, price("DABABA").getPrice());
+        assertEquals(160, price("AAAB").getPriceValue());
+        assertEquals(175, price("AAABB").getPriceValue());
+        assertEquals(190, price("AAABBD").getPriceValue());
+        assertEquals(190, price("DABABA").getPriceValue());
     }
 
     public void testIncremental() {
-        assertEquals(  0, checkout.getTotal().getPrice());
+        assertEquals(  0, checkout.getTotal().getPriceValue());
         checkout.scan(itemInventory.findItem(ItemIdentifier.A));
-        assertEquals( 50, checkout.getTotal().getPrice());
+        assertEquals( 50, checkout.getTotal().getPriceValue());
         checkout.scan(itemInventory.findItem(ItemIdentifier.B));
-        assertEquals( 80, checkout.getTotal().getPrice());
+        assertEquals( 80, checkout.getTotal().getPriceValue());
         checkout.scan(itemInventory.findItem(ItemIdentifier.A));
-        assertEquals(130, checkout.getTotal().getPrice());
+        assertEquals(130, checkout.getTotal().getPriceValue());
         checkout.scan(itemInventory.findItem(ItemIdentifier.A));
-        assertEquals(160, checkout.getTotal().getPrice());
+        assertEquals(160, checkout.getTotal().getPriceValue());
         checkout.scan(itemInventory.findItem(ItemIdentifier.B));
-        assertEquals(175, checkout.getTotal().getPrice());
+        assertEquals(175, checkout.getTotal().getPriceValue());
     }
 }

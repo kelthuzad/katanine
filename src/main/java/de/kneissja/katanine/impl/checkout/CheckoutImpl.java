@@ -1,9 +1,9 @@
 package de.kneissja.katanine.impl.checkout;
 
 import de.kneissja.katanine.api.Checkout;
-import de.kneissja.katanine.impl.item.Item;
-import de.kneissja.katanine.api.Price;
 import de.kneissja.katanine.api.PricingRuleSet;
+import de.kneissja.katanine.impl.Price;
+import de.kneissja.katanine.impl.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,13 +1,13 @@
 package de.kneissja.katanine.impl.item;
 
-import de.kneissja.katanine.api.Price;
+import de.kneissja.katanine.impl.Price;
 
-class ItemImpl implements Item {
+public class ItemImpl implements Item {
 
     private ItemIdentifier identifier;
     private Price price;
 
-    ItemImpl(ItemIdentifier identifier, Price price) {
+    public ItemImpl(ItemIdentifier identifier, Price price) {
         this.identifier = identifier;
         this.price = price;
     }

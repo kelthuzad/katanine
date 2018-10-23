@@ -1,6 +1,6 @@
 package de.kneissja.katanine.impl.item;
 
-import de.kneissja.katanine.api.Price;
+import de.kneissja.katanine.impl.Price;
 
 /**
  * An item to be sold at the checkout

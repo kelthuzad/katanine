@@ -1,8 +1,8 @@
 package de.kneissja.katanine.impl.pricingrule.rules;
 
-import de.kneissja.katanine.impl.item.Item;
-import de.kneissja.katanine.api.Price;
 import de.kneissja.katanine.api.PricingRule;
+import de.kneissja.katanine.impl.Price;
+import de.kneissja.katanine.impl.item.Item;
 
 import java.util.Collection;
 
@@ -13,7 +13,10 @@ public class DefaultPricingRule implements PricingRule {
 
     @Override
     public Price calculatePrice(Collection<Item> items, Price basePrice) {
-        items.forEach(item -> basePrice.add(item.getPrice()));
-        return basePrice;
+        Price calculatedPrice = basePrice;
+        for (Item item: items) {
+            calculatedPrice = calculatedPrice.add(item.getPrice());
+        }
+        return calculatedPrice;
     }
 }

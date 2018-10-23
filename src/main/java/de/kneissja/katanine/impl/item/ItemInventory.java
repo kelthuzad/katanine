@@ -1,6 +1,7 @@
 package de.kneissja.katanine.impl.item;
 
-import de.kneissja.katanine.api.Price;
+
+import de.kneissja.katanine.impl.Price;
 
 import java.util.HashMap;
 import java.util.Map;
