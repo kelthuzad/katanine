@@ -9,6 +9,9 @@ import java.util.Collection;
  * The rule describing how the price of a specific kind of item should be calculated
  */
 public interface PricingRule {
+
+    PricingRule setNextPricingRule(PricingRule nextPricingRule);
+
     /**
      * Calculates the price of the provided items
      * @param items A number of items

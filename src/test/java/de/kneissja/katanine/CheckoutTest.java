@@ -1,19 +1,16 @@
 package de.kneissja.katanine;
 
 import de.kneissja.katanine.checkout.Checkout;
-import de.kneissja.katanine.checkout.CheckoutFactory;
+import de.kneissja.katanine.checkout.CheckoutImpl;
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.item.ItemIdentifier;
 import de.kneissja.katanine.item.ItemInventory;
 import de.kneissja.katanine.pricingrule.PricingRule;
-import de.kneissja.katanine.pricingrule.PricingRuleSet;
-import de.kneissja.katanine.pricingrule.PricingRuleSetFactory;
 import de.kneissja.katanine.pricingrule.rules.DefaultPricingRule;
-import org.junit.Before;
+import de.kneissja.katanine.pricingrule.rules.XItemsCostYPricingRule;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -21,22 +18,32 @@ import static org.junit.Assert.assertEquals;
 public class CheckoutTest {
 
     private ItemInventory itemInventory;
-    private Checkout checkout;
 
-    @Before
-    public void preTest() {
+    public Checkout createCheckout() {
         itemInventory =  new ItemInventory();
         itemInventory.addItem(ItemIdentifier.A, new Price(50))
                 .addItem(ItemIdentifier.B, new Price(30))
                 .addItem(ItemIdentifier.C, new Price(20))
                 .addItem(ItemIdentifier.D, new Price(15));
 
-        List<PricingRule> rules = Arrays.asList(new DefaultPricingRule());
-        PricingRuleSet pricingRuleSet = new PricingRuleSetFactory().createPricingRuleSet(rules);
-        checkout = new CheckoutFactory().createCheckout(pricingRuleSet);
+        Map<ItemIdentifier, Map<Integer, Price>> xItemsCostYRules = new HashMap<>();
+        Map<Integer, Price> itemAPricingRule = new HashMap<>();
+        itemAPricingRule.put(3, new Price(130));
+        Map<Integer, Price> itemBPricingRule = new HashMap<>();
+        itemBPricingRule.put(2, new Price(45));
+        xItemsCostYRules.put(ItemIdentifier.A, itemAPricingRule);
+        xItemsCostYRules.put(ItemIdentifier.B, itemBPricingRule);
+
+        PricingRule pricingRule = new XItemsCostYPricingRule(xItemsCostYRules)
+                .setNextPricingRule(new DefaultPricingRule());
+
+        return new CheckoutImpl(pricingRule);
     }
 
     private List<Item> items(final String goods) {
+        if (goods.isEmpty()) {
+            return Collections.emptyList();
+        }
         List<String> itemNamesList = Arrays.asList(goods.split(""));
 
         return itemNamesList.stream().map(ItemIdentifier::valueOf)
@@ -45,6 +52,7 @@ public class CheckoutTest {
     }
 
     private Price price(final String goods) {
+        Checkout checkout = createCheckout();
         List<Item> items = items(goods);
         items.forEach(checkout::scan);
         return checkout.getTotal();
@@ -70,6 +78,7 @@ public class CheckoutTest {
     }
 
     public void testIncremental() {
+        Checkout checkout = createCheckout();
         assertEquals(  0, checkout.getTotal().getPriceValue());
         checkout.scan(itemInventory.findItem(ItemIdentifier.A));
         assertEquals( 50, checkout.getTotal().getPriceValue());

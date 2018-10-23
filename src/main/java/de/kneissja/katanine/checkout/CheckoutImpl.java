@@ -1,6 +1,6 @@
 package de.kneissja.katanine.checkout;
 
-import de.kneissja.katanine.pricingrule.PricingRuleSet;
+import de.kneissja.katanine.pricingrule.PricingRule;
 import de.kneissja.katanine.Price;
 import de.kneissja.katanine.item.Item;
 
@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckoutImpl implements Checkout {
-    private PricingRuleSet pricingRuleSet;
+    private final PricingRule pricingRule;
     private List<Item> scannedItems = new ArrayList<>();
 
-    public CheckoutImpl(PricingRuleSet pricingRuleSet) {
-        this.pricingRuleSet = pricingRuleSet;
+    public CheckoutImpl(PricingRule pricingRule) {
+        this.pricingRule = pricingRule;
     }
 
     @Override
@@ -22,6 +22,6 @@ public class CheckoutImpl implements Checkout {
 
     @Override
     public Price getTotal() {
-        return pricingRuleSet.calculatePrice(scannedItems);
+        return pricingRule.calculatePrice(scannedItems, new Price(0));
     }
 }

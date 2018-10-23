@@ -24,6 +24,12 @@ public class XItemsCostYPricingRule implements PricingRule {
     }
 
     @Override
+    public PricingRule setNextPricingRule(PricingRule nextPricingRule) {
+        this.nextPricingRule = nextPricingRule;
+        return this;
+    }
+
+    @Override
     public Price calculatePrice(Collection<Item> itemsToCalculate, Price basePrice) {
         Map<ItemIdentifier, List<Item>> itemsByIdentifier = itemsToCalculate.stream().collect(Collectors.groupingBy(Item::getIdentifier));
         List<Item> uncalculatedItems = new ArrayList<>();
@@ -36,6 +42,7 @@ public class XItemsCostYPricingRule implements PricingRule {
 
             if (!priceCalculationMap.containsKey(identifier)) {
                 uncalculatedItems.addAll(items);
+                continue;
             }
 
             Map<Integer, Price> priceMap = priceCalculationMap.get(identifier);
