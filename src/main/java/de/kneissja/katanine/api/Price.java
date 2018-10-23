@@ -16,4 +16,6 @@ public interface Price {
      * @param price price to add to this price
      */
     void add(Price price);
+
+    void multiply(int multiplier);
 }

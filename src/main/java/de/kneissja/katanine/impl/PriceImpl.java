@@ -10,6 +10,10 @@ public class PriceImpl implements Price {
         this.price = price;
     }
 
+    public PriceImpl(Price price) {
+        this.price = price.getPrice();
+    }
+
     @Override
     public int getPrice() {
         return price;
@@ -18,5 +22,10 @@ public class PriceImpl implements Price {
     @Override
     public void add(Price price) {
         this.price += price.getPrice();
+    }
+
+    @Override
+    public void multiply(int multiplier) {
+        this.price *= multiplier;
     }
 }
