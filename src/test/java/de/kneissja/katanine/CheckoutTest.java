@@ -1,13 +1,14 @@
 package de.kneissja.katanine;
 
-import de.kneissja.katanine.api.*;
-import de.kneissja.katanine.impl.Price;
-import de.kneissja.katanine.impl.checkout.CheckoutFactory;
-import de.kneissja.katanine.impl.item.Item;
-import de.kneissja.katanine.impl.item.ItemIdentifier;
-import de.kneissja.katanine.impl.item.ItemInventory;
-import de.kneissja.katanine.impl.pricingrule.PricingRuleSetFactory;
-import de.kneissja.katanine.impl.pricingrule.rules.DefaultPricingRule;
+import de.kneissja.katanine.checkout.Checkout;
+import de.kneissja.katanine.checkout.CheckoutFactory;
+import de.kneissja.katanine.item.Item;
+import de.kneissja.katanine.item.ItemIdentifier;
+import de.kneissja.katanine.item.ItemInventory;
+import de.kneissja.katanine.pricingrule.PricingRule;
+import de.kneissja.katanine.pricingrule.PricingRuleSet;
+import de.kneissja.katanine.pricingrule.PricingRuleSetFactory;
+import de.kneissja.katanine.pricingrule.rules.DefaultPricingRule;
 import org.junit.Before;
 import org.junit.Test;
 

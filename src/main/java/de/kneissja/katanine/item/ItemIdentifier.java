@@ -1,4 +1,4 @@
-package de.kneissja.katanine.impl.item;
+package de.kneissja.katanine.item;
 
 public enum ItemIdentifier {
     A,

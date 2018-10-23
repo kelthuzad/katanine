@@ -1,4 +1,4 @@
-package de.kneissja.katanine.impl;
+package de.kneissja.katanine;
 
 public class Price {
 

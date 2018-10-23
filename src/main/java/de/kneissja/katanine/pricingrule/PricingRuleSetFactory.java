@@ -1,7 +1,4 @@
-package de.kneissja.katanine.impl.pricingrule;
-
-import de.kneissja.katanine.api.PricingRule;
-import de.kneissja.katanine.api.PricingRuleSet;
+package de.kneissja.katanine.pricingrule;
 
 import java.util.Collection;
 

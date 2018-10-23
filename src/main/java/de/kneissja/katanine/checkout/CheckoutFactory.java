@@ -1,7 +1,6 @@
-package de.kneissja.katanine.impl.checkout;
+package de.kneissja.katanine.checkout;
 
-import de.kneissja.katanine.api.Checkout;
-import de.kneissja.katanine.api.PricingRuleSet;
+import de.kneissja.katanine.pricingrule.PricingRuleSet;
 
 /**
  * Creates a new checkout

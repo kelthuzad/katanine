@@ -1,6 +1,6 @@
-package de.kneissja.katanine.impl.item;
+package de.kneissja.katanine.item;
 
-import de.kneissja.katanine.impl.Price;
+import de.kneissja.katanine.Price;
 
 public class ItemImpl implements Item {
 

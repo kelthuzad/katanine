@@ -1,9 +1,9 @@
-package de.kneissja.katanine.impl.pricingrule.rules;
+package de.kneissja.katanine.pricingrule.rules;
 
-import de.kneissja.katanine.impl.Price;
-import de.kneissja.katanine.impl.item.Item;
-import de.kneissja.katanine.impl.item.ItemIdentifier;
-import de.kneissja.katanine.impl.item.ItemImpl;
+import de.kneissja.katanine.Price;
+import de.kneissja.katanine.item.Item;
+import de.kneissja.katanine.item.ItemIdentifier;
+import de.kneissja.katanine.item.ItemImpl;
 import org.junit.Test;
 
 import java.util.Arrays;
