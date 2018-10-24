@@ -1,6 +1,6 @@
 package de.kneissja.katanine.item;
 
-import de.kneissja.katanine.Price;
+import de.kneissja.katanine.price.Price;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

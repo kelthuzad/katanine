@@ -1,6 +1,6 @@
 package de.kneissja.katanine.pricingrule.rules;
 
-import de.kneissja.katanine.Price;
+import de.kneissja.katanine.price.Price;
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.item.ItemIdentifier;
 import de.kneissja.katanine.item.ItemInventory;

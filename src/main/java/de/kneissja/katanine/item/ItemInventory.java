@@ -1,7 +1,7 @@
 package de.kneissja.katanine.item;
 
 
-import de.kneissja.katanine.Price;
+import de.kneissja.katanine.price.Price;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,10 +1,11 @@
 package de.kneissja.katanine;
 
 import de.kneissja.katanine.checkout.Checkout;
-import de.kneissja.katanine.checkout.CheckoutImpl;
+import de.kneissja.katanine.checkout.CheckoutFactory;
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.item.ItemIdentifier;
 import de.kneissja.katanine.item.ItemInventory;
+import de.kneissja.katanine.price.Price;
 import de.kneissja.katanine.pricingrule.PricingRule;
 import de.kneissja.katanine.pricingrule.rules.SimplePricingRule;
 import de.kneissja.katanine.pricingrule.rules.XItemsCostYPricingRule;
@@ -41,7 +42,7 @@ public class CheckoutTest {
         PricingRule pricingRule = new XItemsCostYPricingRule(xItemsCostYRules)
                 .setNextPricingRule(new SimplePricingRule());
 
-        return new CheckoutImpl(pricingRule);
+        return new CheckoutFactory().createCheckout(pricingRule);
     }
 
     private List<Item> items(final String goods) {

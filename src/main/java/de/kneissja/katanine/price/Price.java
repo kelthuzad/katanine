@@ -1,4 +1,4 @@
-package de.kneissja.katanine;
+package de.kneissja.katanine.price;
 
 /**
  * Model of an item price. This class is immutable.

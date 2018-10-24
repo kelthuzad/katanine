@@ -1,7 +1,7 @@
 package de.kneissja.katanine.pricingrule.rules;
 
 import de.kneissja.katanine.pricingrule.PricingRule;
-import de.kneissja.katanine.Price;
+import de.kneissja.katanine.price.Price;
 import de.kneissja.katanine.item.Item;
 
 import java.util.Collection;

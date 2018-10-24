@@ -1,6 +1,6 @@
 package de.kneissja.katanine.checkout;
 
-import de.kneissja.katanine.Price;
+import de.kneissja.katanine.price.Price;
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.pricingrule.PricingRule;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import java.util.List;
  * Implementation of the checkout.
  * It can be initialized with a pricing rule and will calculate the price accordingly
  */
-public class CheckoutImpl implements Checkout {
+class CheckoutImpl implements Checkout {
     private final PricingRule pricingRule;
     private List<Item> scannedItems = new ArrayList<>();
 
@@ -22,8 +22,12 @@ public class CheckoutImpl implements Checkout {
     /**
      * Creates a new checkout that calculates prices according to the provided rule
      * @param pricingRule the pricing rule that is used to calculate the prices
+     * @throws IllegalArgumentException if the pricing rule is null
      */
-    public CheckoutImpl(PricingRule pricingRule) {
+    CheckoutImpl(PricingRule pricingRule) {
+        if (pricingRule == null) {
+            throw new IllegalArgumentException("There must be a pricing rule for the checkout");
+        }
         this.pricingRule = pricingRule;
     }
 

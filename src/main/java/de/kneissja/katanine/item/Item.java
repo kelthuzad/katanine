@@ -1,6 +1,6 @@
 package de.kneissja.katanine.item;
 
-import de.kneissja.katanine.Price;
+import de.kneissja.katanine.price.Price;
 
 /**
  * An item to be sold at the checkout

@@ -2,7 +2,7 @@ package de.kneissja.katanine.pricingrule.rules;
 
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.pricingrule.PricingRule;
-import de.kneissja.katanine.Price;
+import de.kneissja.katanine.price.Price;
 import de.kneissja.katanine.item.ItemIdentifier;
 
 import java.util.*;
@@ -20,7 +20,7 @@ public class XItemsCostYPricingRule implements PricingRule {
     /**
      * Creates a new pricing rule instance
      * @param priceCalculationMap map with the info about the special price. The map must contain one entry per item identifier.
-     *                            Each entry contains itself a mapping from "number of items" to "special price"
+     *                            Each entry contains itself a mapping from "number of items" to "special price for this number of items"
      */
     public XItemsCostYPricingRule(Map<ItemIdentifier, Map<Integer, Price>> priceCalculationMap) {
         this.priceCalculationMap = priceCalculationMap;
@@ -40,7 +40,7 @@ public class XItemsCostYPricingRule implements PricingRule {
         Price calculatedPrice = basePrice;
 
         for (Map.Entry<ItemIdentifier, List<Item>> entry: itemsByIdentifier.entrySet()) {
-            calculatedPrice = getItemPrice(uncalculatedItems, calculatedPrice, entry.getKey(), entry.getValue());
+            calculatedPrice = calculateItemPrice(uncalculatedItems, calculatedPrice, entry.getKey(), entry.getValue());
         }
 
         if (!uncalculatedItems.isEmpty() && nextPricingRule == null) {
@@ -50,7 +50,7 @@ public class XItemsCostYPricingRule implements PricingRule {
         return nextPricingRule.calculatePrice(uncalculatedItems, calculatedPrice);
     }
 
-    private Price getItemPrice(List<Item> uncalculatedItems, Price currentPrice, ItemIdentifier identifier, List<Item> items) {
+    private Price calculateItemPrice(List<Item> uncalculatedItems, Price currentPrice, ItemIdentifier identifier, List<Item> items) {
         Price newPrice = currentPrice;
 
         if (!priceCalculationMap.containsKey(identifier)) {

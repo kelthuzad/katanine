@@ -1,6 +1,6 @@
 package de.kneissja.katanine.checkout;
 
-import de.kneissja.katanine.Price;
+import de.kneissja.katanine.price.Price;
 import de.kneissja.katanine.item.Item;
 
 /**
