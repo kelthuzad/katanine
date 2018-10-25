@@ -5,11 +5,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ItemInventoryTest {
+public class ItemServiceTest {
 
     @Test
     public void testItemInventory() {
-        ItemInventory inventory = new ItemInventory();
+        ItemService inventory = new ItemService();
 
         inventory.addItem(ItemIdentifier.A, new Price(1));
         inventory.addItem(ItemIdentifier.B, new Price(2));
@@ -22,7 +22,7 @@ public class ItemInventoryTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testItemInventory_double_entry() {
-        ItemInventory inventory = new ItemInventory();
+        ItemService inventory = new ItemService();
 
         inventory.addItem(ItemIdentifier.A, new Price(1));
         inventory.addItem(ItemIdentifier.A, new Price(1));

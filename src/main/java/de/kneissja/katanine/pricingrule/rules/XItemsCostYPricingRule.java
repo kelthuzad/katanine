@@ -1,5 +1,6 @@
 package de.kneissja.katanine.pricingrule.rules;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.pricingrule.PricingRule;
 import de.kneissja.katanine.price.Price;
@@ -14,7 +15,10 @@ import java.util.stream.Collectors;
  */
 public class XItemsCostYPricingRule implements PricingRule {
 
+    @JsonProperty
     private Map<ItemIdentifier, Map<Integer, Price>> priceCalculationMap;
+
+    @JsonProperty
     private PricingRule nextPricingRule;
 
     /**
@@ -24,6 +28,13 @@ public class XItemsCostYPricingRule implements PricingRule {
      */
     public XItemsCostYPricingRule(Map<ItemIdentifier, Map<Integer, Price>> priceCalculationMap) {
         this.priceCalculationMap = priceCalculationMap;
+    }
+
+    /**
+     * Default constructor for deserialization
+     */
+    public XItemsCostYPricingRule() {
+
     }
 
     @Override

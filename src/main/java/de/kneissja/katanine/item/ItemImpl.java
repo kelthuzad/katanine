@@ -23,6 +23,12 @@ class ItemImpl implements Item {
         this.price = price;
     }
 
+    /**
+     * Empty constructor for deserialization
+     */
+    ItemImpl() {
+    }
+
     @Override
     public ItemIdentifier getIdentifier() {
         return identifier;

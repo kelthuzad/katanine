@@ -1,30 +1,16 @@
 package de.kneissja.katanine;
 
-import de.kneissja.katanine.checkout.Checkout;
-import de.kneissja.katanine.checkout.CheckoutFactory;
-import de.kneissja.katanine.fileutil.CSVLoader;
-import de.kneissja.katanine.item.Item;
-import de.kneissja.katanine.item.ItemIdentifier;
-import de.kneissja.katanine.item.ItemInventory;
-import de.kneissja.katanine.price.Price;
-import de.kneissja.katanine.pricingrule.PricingRule;
-import de.kneissja.katanine.pricingrule.rules.SimplePricingRule;
-import de.kneissja.katanine.pricingrule.rules.XItemsCostYPricingRule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+@SpringBootApplication
 public class Main {
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+    }
+
+    /*private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         if (args.length == 0) {
@@ -33,7 +19,7 @@ public class Main {
         }
 
         Path itemPricesFile = Paths.get(ClassLoader.getSystemResource("itemprices.csv").toURI());
-        ItemInventory inventory = initInventory(itemPricesFile);
+        ItemService inventory = initInventory(itemPricesFile);
         List<ItemIdentifier> itemIdentifiers = parseInput(args[0]);
         List<Item> items = itemIdentifiers.stream().map(inventory::findItem).collect(Collectors.toList());
 
@@ -57,9 +43,9 @@ public class Main {
                 .collect(Collectors.toList());
     }
 
-    private static ItemInventory initInventory(Path itemFile) throws IOException {
+    private static ItemService initInventory(Path itemFile) throws IOException {
         List<List<String>> itemData = new CSVLoader().loadFile(itemFile);
-        ItemInventory inventory = new ItemInventory();
+        ItemService inventory = new ItemService();
 
         itemData.forEach(itemInfos -> {
             if (itemInfos.size() != 2) {
@@ -91,5 +77,5 @@ public class Main {
             itemPriceMap.put(amount, price);
         });
         return rules;
-    }
+    } */
 }

@@ -19,6 +19,12 @@ public class Price {
     }
 
     /**
+     * Standard constructor for deserialization
+     */
+    public Price() {
+    }
+
+    /**
      * Creates a new price
      * @param price price that should be used as template
      */

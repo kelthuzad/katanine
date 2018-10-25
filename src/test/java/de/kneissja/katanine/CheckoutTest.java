@@ -1,29 +1,32 @@
 package de.kneissja.katanine;
 
 import de.kneissja.katanine.checkout.Checkout;
-import de.kneissja.katanine.checkout.CheckoutFactory;
+import de.kneissja.katanine.checkout.CheckoutService;
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.item.ItemIdentifier;
-import de.kneissja.katanine.item.ItemInventory;
+import de.kneissja.katanine.item.ItemService;
 import de.kneissja.katanine.price.Price;
 import de.kneissja.katanine.pricingrule.PricingRule;
 import de.kneissja.katanine.pricingrule.rules.SimplePricingRule;
 import de.kneissja.katanine.pricingrule.rules.XItemsCostYPricingRule;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(SpringRunner.class)
 public class CheckoutTest {
 
-    private ItemInventory inventory;
+    private ItemService inventory;
 
     @Before
     public void init() {
-        inventory = new ItemInventory()
+        inventory = new ItemService()
                 .addItem(ItemIdentifier.A, new Price(50))
                 .addItem(ItemIdentifier.B, new Price(30))
                 .addItem(ItemIdentifier.C, new Price(20))
@@ -42,7 +45,7 @@ public class CheckoutTest {
         PricingRule pricingRule = new XItemsCostYPricingRule(xItemsCostYRules)
                 .setNextPricingRule(new SimplePricingRule());
 
-        return new CheckoutFactory().createCheckout(pricingRule);
+        return new CheckoutService();
     }
 
     private List<Item> items(final String goods) {

@@ -1,13 +1,18 @@
 package de.kneissja.katanine.pricingrule;
 
-import de.kneissja.katanine.price.Price;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.kneissja.katanine.item.Item;
+import de.kneissja.katanine.price.Price;
 
 import java.util.Collection;
 
 /**
  * The rule describing how the price of a specific kind of item should be calculated
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({@JsonSubTypes.Type(value = de.kneissja.katanine.pricingrule.rules.SimplePricingRule.class, name = "simple"),
+               @JsonSubTypes.Type(value = de.kneissja.katanine.pricingrule.rules.XItemsCostYPricingRule.class, name = "xcosty")})
 public interface PricingRule {
 
     /**
