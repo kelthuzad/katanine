@@ -43,4 +43,9 @@ class ItemImpl implements Item {
     public String toString() {
         return "Item "+identifier.name()+", "+price;
     }
+
+    @Override
+    public int compareTo(Item o) {
+        return identifier.compareTo(o.getIdentifier());
+    }
 }

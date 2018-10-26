@@ -52,7 +52,10 @@ public class ItemService {
      * @return An unmodifiable collection of all items
      */
     public Collection<Item> findAllItems() {
-        return Collections.unmodifiableCollection(inventory.values());
+        List<Item> items = new ArrayList<>(inventory.values());
+        Collections.sort(items);
+
+        return Collections.unmodifiableCollection(items);
     }
 
     /**
