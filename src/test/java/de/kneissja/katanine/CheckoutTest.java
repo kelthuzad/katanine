@@ -9,12 +9,12 @@ import de.kneissja.katanine.pricingrule.PricingRule;
 import de.kneissja.katanine.pricingrule.PricingRuleService;
 import de.kneissja.katanine.pricingrule.rules.SimplePricingRule;
 import de.kneissja.katanine.pricingrule.rules.XItemsCostYPricingRule;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CheckoutTest {
 
     @Autowired
@@ -54,12 +55,6 @@ public class CheckoutTest {
                 .setNextPricingRule(new SimplePricingRule());
 
         pricingRuleService.setPricingRule(pricingRule);
-    }
-
-    @After
-    public void cleanup() {
-        inventory.clearItems();
-        checkoutService.deleteScannedItems();
     }
 
     private List<Item> items(final String goods) {
