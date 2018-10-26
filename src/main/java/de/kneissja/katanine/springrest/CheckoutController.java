@@ -19,10 +19,10 @@ import java.util.List;
 public class CheckoutController {
 
     @Autowired
-    ItemService inventory;
+    private ItemService inventory;
 
     @Autowired
-    CheckoutService checkoutService;
+    private CheckoutService checkoutService;
 
     @RequestMapping(value = "/checkout/scan", method = RequestMethod.POST)
     public ResponseEntity<List<Item>> scanItems(@RequestBody String identifierName) {
