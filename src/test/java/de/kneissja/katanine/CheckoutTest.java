@@ -1,17 +1,20 @@
 package de.kneissja.katanine;
 
-import de.kneissja.katanine.checkout.Checkout;
 import de.kneissja.katanine.checkout.CheckoutService;
 import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.item.ItemIdentifier;
 import de.kneissja.katanine.item.ItemService;
 import de.kneissja.katanine.price.Price;
 import de.kneissja.katanine.pricingrule.PricingRule;
+import de.kneissja.katanine.pricingrule.PricingRuleService;
 import de.kneissja.katanine.pricingrule.rules.SimplePricingRule;
 import de.kneissja.katanine.pricingrule.rules.XItemsCostYPricingRule;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
@@ -20,20 +23,25 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class CheckoutTest {
 
+    @Autowired
     private ItemService inventory;
+
+    @Autowired
+    private PricingRuleService pricingRuleService;
+
+    @Autowired
+    private CheckoutService checkoutService;
 
     @Before
     public void init() {
-        inventory = new ItemService()
-                .addItem(ItemIdentifier.A, new Price(50))
-                .addItem(ItemIdentifier.B, new Price(30))
-                .addItem(ItemIdentifier.C, new Price(20))
-                .addItem(ItemIdentifier.D, new Price(15));
-    }
+        inventory.addItem(ItemIdentifier.A, new Price(50))
+                 .addItem(ItemIdentifier.B, new Price(30))
+                 .addItem(ItemIdentifier.C, new Price(20))
+                 .addItem(ItemIdentifier.D, new Price(15));
 
-    public Checkout createCheckout() {
         Map<ItemIdentifier, Map<Integer, Price>> xItemsCostYRules = new HashMap<>();
         Map<Integer, Price> itemAPricingRule = new HashMap<>();
         itemAPricingRule.put(3, new Price(130));
@@ -45,7 +53,13 @@ public class CheckoutTest {
         PricingRule pricingRule = new XItemsCostYPricingRule(xItemsCostYRules)
                 .setNextPricingRule(new SimplePricingRule());
 
-        return new CheckoutService();
+        pricingRuleService.setPricingRule(pricingRule);
+    }
+
+    @After
+    public void cleanup() {
+        inventory.clearItems();
+        checkoutService.deleteScannedItems();
     }
 
     private List<Item> items(final String goods) {
@@ -60,10 +74,11 @@ public class CheckoutTest {
     }
 
     private Price price(final String goods) {
-        Checkout checkout = createCheckout();
         List<Item> items = items(goods);
-        items.forEach(checkout::scan);
-        return checkout.getTotal();
+        items.forEach(checkoutService::scan);
+        Price total = checkoutService.getTotal();
+        checkoutService.deleteScannedItems();
+        return total;
     }
 
     @Test
@@ -85,18 +100,18 @@ public class CheckoutTest {
         assertEquals(190, price("DABABA").getPriceValue());
     }
 
+    @Test
     public void testIncremental() {
-        Checkout checkout = createCheckout();
-        assertEquals(  0, checkout.getTotal().getPriceValue());
-        checkout.scan(inventory.findItem(ItemIdentifier.A));
-        assertEquals( 50, checkout.getTotal().getPriceValue());
-        checkout.scan(inventory.findItem(ItemIdentifier.B));
-        assertEquals( 80, checkout.getTotal().getPriceValue());
-        checkout.scan(inventory.findItem(ItemIdentifier.A));
-        assertEquals(130, checkout.getTotal().getPriceValue());
-        checkout.scan(inventory.findItem(ItemIdentifier.A));
-        assertEquals(160, checkout.getTotal().getPriceValue());
-        checkout.scan(inventory.findItem(ItemIdentifier.B));
-        assertEquals(175, checkout.getTotal().getPriceValue());
+        assertEquals(  0, checkoutService.getTotal().getPriceValue());
+        checkoutService.scan(inventory.findItem(ItemIdentifier.A));
+        assertEquals( 50, checkoutService.getTotal().getPriceValue());
+        checkoutService.scan(inventory.findItem(ItemIdentifier.B));
+        assertEquals( 80, checkoutService.getTotal().getPriceValue());
+        checkoutService.scan(inventory.findItem(ItemIdentifier.A));
+        assertEquals(130, checkoutService.getTotal().getPriceValue());
+        checkoutService.scan(inventory.findItem(ItemIdentifier.A));
+        assertEquals(160, checkoutService.getTotal().getPriceValue());
+        checkoutService.scan(inventory.findItem(ItemIdentifier.B));
+        assertEquals(175, checkoutService.getTotal().getPriceValue());
     }
 }

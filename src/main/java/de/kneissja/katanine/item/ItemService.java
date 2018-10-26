@@ -54,4 +54,11 @@ public class ItemService {
     public Collection<Item> findAllItems() {
         return Collections.unmodifiableCollection(inventory.values());
     }
+
+    /**
+     * Empties the inventory
+     */
+    public void clearItems() {
+        inventory.clear();
+    }
 }
