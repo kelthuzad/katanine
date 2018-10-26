@@ -5,6 +5,8 @@ import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.item.ItemIdentifier;
 import de.kneissja.katanine.item.ItemService;
 import de.kneissja.katanine.price.Price;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,12 @@ public class CheckoutController {
     @Autowired
     private CheckoutService checkoutService;
 
+    private static final Logger logger = LoggerFactory.getLogger(CheckoutController.class);
+
     @RequestMapping(value = "/checkout/scan", method = RequestMethod.POST)
     public ResponseEntity<List<Item>> scanItems(@RequestBody String identifierName) {
+
+        logger.debug("Received POST request to /checkout/scan");
 
         if (identifierName == null || identifierName.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -50,16 +56,19 @@ public class CheckoutController {
 
     @RequestMapping(value = "/checkout/scan", method = RequestMethod.GET)
     public List<Item> getScannedItems() {
+        logger.debug("Received GET request to /checkout/scan");
         return checkoutService.getScannedItems();
     }
 
     @RequestMapping(value = "/checkout/scan", method = RequestMethod.DELETE)
     public void resetCheckout() {
+        logger.debug("Received DELETE request to /checkout/scan");
         checkoutService.deleteScannedItems();
     }
 
     @RequestMapping(value = "/checkout/total", method = RequestMethod.GET)
     public Price getTotal() {
+        logger.debug("Received GET request to /checkout/total");
         return checkoutService.getTotal();
     }
 }

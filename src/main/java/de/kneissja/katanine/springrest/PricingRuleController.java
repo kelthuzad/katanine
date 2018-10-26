@@ -2,6 +2,8 @@ package de.kneissja.katanine.springrest;
 
 import de.kneissja.katanine.pricingrule.PricingRule;
 import de.kneissja.katanine.pricingrule.PricingRuleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +18,11 @@ public class PricingRuleController {
     @Autowired
     private PricingRuleService pricingRuleService;
 
+    private static final Logger logger = LoggerFactory.getLogger(PricingRuleController.class);
+
     @RequestMapping(value = "/pricingrule", method = RequestMethod.POST)
     public ResponseEntity<PricingRule> setPricingRule(@RequestBody PricingRule pricingRule) {
+        logger.debug("Received POST request to /pricingrule");
 
         if (pricingRule == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -29,6 +34,8 @@ public class PricingRuleController {
 
     @RequestMapping(value = "/pricingrule", method = RequestMethod.GET)
     public ResponseEntity<PricingRule> getPricingRule() {
+        logger.debug("Received GET request to /pricingrule");
+
         PricingRule pricingRule = pricingRuleService.getPricingRule();
 
         if (pricingRule == null) {
