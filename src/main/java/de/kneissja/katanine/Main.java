@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -32,13 +30,11 @@ public class Main {
             return;
         }
 
-        Path itemPricesFile = Paths.get(ClassLoader.getSystemResource("itemprices.csv").toURI());
-        ItemInventory inventory = initInventory(itemPricesFile);
+        ItemInventory inventory = initInventory("/itemprices.csv");
         List<ItemIdentifier> itemIdentifiers = parseInput(args[0]);
         List<Item> items = itemIdentifiers.stream().map(inventory::findItem).collect(Collectors.toList());
 
-        Path ruleFile = Paths.get(ClassLoader.getSystemResource("xitemscostyrules.csv").toURI());
-        Map<ItemIdentifier, Map<Integer, Price>> xItemsCostYRules = loadXItemsCostYRules(ruleFile);
+        Map<ItemIdentifier, Map<Integer, Price>> xItemsCostYRules = loadXItemsCostYRules("/xitemscostyrules.csv");
 
         PricingRule pricingRule = new XItemsCostYPricingRule(xItemsCostYRules)
                 .setNextPricingRule(new SimplePricingRule());
@@ -57,7 +53,7 @@ public class Main {
                 .collect(Collectors.toList());
     }
 
-    private static ItemInventory initInventory(Path itemFile) throws IOException {
+    private static ItemInventory initInventory(String itemFile) throws IOException {
         List<List<String>> itemData = new CSVLoader().loadFile(itemFile);
         ItemInventory inventory = new ItemInventory();
 
@@ -73,7 +69,7 @@ public class Main {
         return inventory;
     }
 
-    private static Map<ItemIdentifier, Map<Integer, Price>> loadXItemsCostYRules(Path ruleFile) throws IOException {
+    private static Map<ItemIdentifier, Map<Integer, Price>> loadXItemsCostYRules(String ruleFile) throws IOException {
         List<List<String>> ruleData = new CSVLoader().loadFile(ruleFile);
         Map<ItemIdentifier, Map<Integer, Price>> rules = new HashMap<>();
 

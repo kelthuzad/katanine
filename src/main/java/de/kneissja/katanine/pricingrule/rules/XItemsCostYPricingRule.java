@@ -4,6 +4,8 @@ import de.kneissja.katanine.item.Item;
 import de.kneissja.katanine.pricingrule.PricingRule;
 import de.kneissja.katanine.price.Price;
 import de.kneissja.katanine.item.ItemIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +18,7 @@ public class XItemsCostYPricingRule implements PricingRule {
 
     private Map<ItemIdentifier, Map<Integer, Price>> priceCalculationMap;
     private PricingRule nextPricingRule;
+    private static final Logger logger = LoggerFactory.getLogger(XItemsCostYPricingRule.class);
 
     /**
      * Creates a new pricing rule instance
@@ -65,17 +68,29 @@ public class XItemsCostYPricingRule implements PricingRule {
                 .collect(Collectors.toList());
 
         int numberOfItems = items.size();
-        for (Integer itemAmountDefinition : sorteditemAmountDefinitionList) {
-            int numberOfTimesThisItemAmountCanBeApplied = numberOfItems / itemAmountDefinition;
+
+        // iterate all price rules for this item type, starting with the rule that requires the highest amount of items
+        for (Integer itemAmount : sorteditemAmountDefinitionList) {
+            int numberOfTimesThisItemAmountCanBeApplied = numberOfItems / itemAmount; // how often the special price can be applied
 
             if (numberOfTimesThisItemAmountCanBeApplied == 0) {
-                continue;
+                continue; // this special price cannot be used because there are less items than the rule requires
             }
 
-            Price specialPriceForThisAmountOfItems = specialPriceMap.get(itemAmountDefinition);
+            Price specialPriceForThisAmountOfItems = specialPriceMap.get(itemAmount);
             Price calculatedPrice = specialPriceForThisAmountOfItems.multiply(numberOfTimesThisItemAmountCanBeApplied);
             newPrice = newPrice.add(calculatedPrice);
-            numberOfItems -= numberOfTimesThisItemAmountCanBeApplied * itemAmountDefinition;
+
+            int numberOfCalculatedItems = numberOfTimesThisItemAmountCanBeApplied * itemAmount; // how many items' price were calculated by this special price rule
+            numberOfItems -= numberOfCalculatedItems;
+
+            logger.debug("Calculated special price (get {} for {}) for item {}. This price was applied {} times for a total of {} items which cost {}",
+                    itemAmount,
+                    specialPriceForThisAmountOfItems.getPriceValue(),
+                    identifier,
+                    numberOfTimesThisItemAmountCanBeApplied,
+                    numberOfCalculatedItems,
+                    calculatedPrice.getPriceValue());
 
             if (numberOfItems == 0) {
                 break; // all items were calculated
